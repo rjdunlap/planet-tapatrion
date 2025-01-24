@@ -35,12 +35,12 @@ function MapGen_Tapatrion()
     }
     map_gen_setting.autoplace_controls = {
         ["gleba_plants"] = { frequency = 12, size = 2, richness = 1},
-        ["gleba_enemy_base"] = { frequency = 1.5, size = 1, richness = 1},
+        ["gleba_enemy_base"] = { frequency = 20, size = 1, richness = 1},
         ["gleba_water"] = {frequency = 0.4, size = 0.5, richness = 0.5},
         ["gleba_cliff"] = {},
         ["gleba_stone"] = {frequency = 15, size = 10, richness = 100},
         ["trees"] = { frequency = 4.5, size = 2, richness = 1 },
-        ["enemy-base"] = { frequency = 4, size = 1.2, richness = 1},
+        ["enemy-base"] = { frequency = 12, size = 1.2, richness = 1},
         ["lithium_brine"] = {},
         ["fluorine_vent"] = {},
         ["aquilo_crude_oil"] = {}
@@ -260,6 +260,7 @@ local tapatrion =
     map_gen_settings = MapGen_Tapatrion(),
     asteroid_spawn_influence = 1,
     asteroid_spawn_definitions = start_astroid_spawn,
+    entities_require_heating = true,
     persistent_ambient_sounds =
     {
       base_ambience =
@@ -329,7 +330,7 @@ local tapatrion =
         }
       }
     },
-    pollutant_type = "pollution",
+    pollutant_type = "spores",
     ticks_between_player_effects = 1,
     surface_render_parameters =
     {
@@ -402,31 +403,6 @@ tapatrion.orbit = {
 
 PlanetsLib:extend({tapatrion})
 PlanetsLib.borrow_music(data.raw["planet"]["aquilo"], tapatrion)
-
-local tapatrion_connection = {
-  type = "space-connection",
-  name = "fulgora-tapatrion",
-  from = "fulgora",
-  to = "tapatrion",
-  subgroup = data.raw["space-connection"]["nauvis-vulcanus"].subgroup,
-  length = 45000,
-  asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_gleba),
-}
-data:extend{tapatrion_connection}
-
-
-local tapatrion_connection2 = {
-  type = "space-connection",
-  name = "aquilo-solar-system-edge",
-  subgroup = "planet-connections",
-  from = "tapatrion",
-  to = "solar-system-edge",
-  order = "h",
-  length = 100000,
-  asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.aquilo_solar_system_edge)
-}
-data:extend{tapatrion_connection2}
-
 
 data:extend {{
     type = "technology",
