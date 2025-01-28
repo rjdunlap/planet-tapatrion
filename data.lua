@@ -396,13 +396,23 @@ tapatrion.orbit = {
         type = "space-location",
         name = "star",
     },
-    distance = 35,
-    orientation = 0.225,
+    distance = 32,
+    orientation = 0.24,
 }
-
 
 PlanetsLib:extend({tapatrion})
 PlanetsLib.borrow_music(data.raw["planet"]["aquilo"], tapatrion)
+
+local tapatrion_connection = {
+  type = "space-connection",
+  name = "gleba-tapatrion",
+  from = "gleba",
+  to = "tapatrion",
+  subgroup = data.raw["space-connection"]["nauvis-vulcanus"].subgroup,
+  length = 15000,
+  asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.nauvis_vulcanus),
+}
+data:extend{tapatrion_connection}
 
 data:extend {{
     type = "technology",
