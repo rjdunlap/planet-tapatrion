@@ -249,6 +249,7 @@ local tapatrion =
     starmap_icon = "__planet-tapatrion__/graphics/planet-tapatrion.png",
     starmap_icon_size = 512,
     magnitude = nauvis.magnitude,
+    subgroup = "planets",
     surface_properties = {
         ["solar-power"] = 1,
         ["pressure"] = 2000,
