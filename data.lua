@@ -417,7 +417,7 @@ data:extend{tapatrion_connection}
 data:extend {{
     type = "technology",
     name = "planet-discovery-tapatrion",
-    icons = util.technology_icon_constant_planet("__planet-tapatrion__/graphics/planet-tapatrion.png"),
+    icons = PlanetsLib.technology_icon_constant_planet("__planet-tapatrion__/graphics/planet-tapatrion.png", 512),
     icon_size = 512,
     essential = true,
     localised_description = {"space-location-description.tapatrion"},
