@@ -1,12 +1,14 @@
 {
     "name": "planet-tapatrion",
-    "version": "0.1.2",
+    "version": "0.1.11",
     "title": "Planet Tapatrion",
     "author": "rjdunlap",
     "factorio_version": "2.0",
     "dependencies": ["base >= 2.0.28",
       "space-age",
       "any-planet-start >= 1.1.7",
-      "PlanetsLib >= 1.1.38"],
+      "PlanetsLib >= 1.1.38",
+      "slipstacks",
+      "heat-inserter"],
     "description": "This mod adds in a planet tapatrion. A frigid swamp world."
   }

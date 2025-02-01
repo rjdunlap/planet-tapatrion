@@ -38,7 +38,7 @@ function MapGen_Tapatrion()
         ["gleba_enemy_base"] = { frequency = 20, size = 1, richness = 1},
         ["gleba_water"] = {frequency = 0.4, size = 0.5, richness = 0.5},
         ["gleba_cliff"] = {},
-        ["gleba_stone"] = {frequency = 15, size = 10, richness = 100},
+        ["gleba_stone"] = {frequency = 20, size = 10, richness = 100},
         ["trees"] = { frequency = 4.5, size = 2, richness = 1 },
         ["enemy-base"] = { frequency = 12, size = 1.2, richness = 1},
         ["lithium_brine"] = {},
@@ -415,6 +415,27 @@ local tapatrion_connection = {
 }
 data:extend{tapatrion_connection}
 
+data.raw["mining-drill"]["burner-mining-drill"].heating_energy = "0kW"
+
+data:extend{
+  {
+      type = "recipe",
+      name = "concrete-from-ice",
+      localised_name = {"recipe-name.concrete-from-ice"},
+      icon = "__base__/graphics/icons/concrete.png",
+      energy_required = 20,
+      enabled = false,
+      allow_decomposition = false,
+      ingredients =
+      {
+          {type = "item", name = "stone-brick", amount = 5},
+          {type = "item", name = "iron-ore", amount = 1},
+          {type = "item", name = "ice", amount = 5}
+      },
+      results = {{type="item", name="concrete", amount=10}}
+  },
+}
+
 data:extend {{
     type = "technology",
     name = "planet-discovery-tapatrion",
@@ -431,6 +452,26 @@ data:extend {{
         {
           type = "unlock-recipe",
           recipe = "decomposition",
+        },
+        {
+          type = "unlock-recipe",
+          recipe = "concrete-from-ice",
+        },
+        {
+          type = "unlock-recipe",
+          recipe = "ammoniacal-solution-separation",
+        },
+        {
+          type = "unlock-recipe",
+          recipe = "solid-fuel-from-ammonia"
+        },
+        {
+          type = "unlock-recipe",
+          recipe = "ammonia-rocket-fuel"
+        },
+        {
+          type = "unlock-recipe",
+          recipe = "ice-platform",
         }
     },
     prerequisites = {
@@ -448,6 +489,7 @@ data:extend {{
     },
     order = "ea[tapatrion]",
 }}
+
 
 data:extend({{
   type = "recipe",
@@ -475,15 +517,15 @@ data:extend({{
     secondary = {r = 0.551, g = 0.762, b = 0.844, a = 1.000},
     tertiary = {r = 0.596, g = 0.773, b = 0.895, a = 1.000},
     quaternary = {r = 0.290, g = 0.734, b = 1, a = 1.000},
-  }
+  },
+  
 }})
-
 
 for _,recipe in pairs (data.raw.recipe) do 
   if recipe.surface_conditions then
     for i, condition in pairs( recipe.surface_conditions ) do
       if condition.property == "pressure" and condition.min == 100 then 
-        condition.min = 2000
+        condition.min = 100
         condition.max = 2000
       end
     end
