@@ -5,6 +5,71 @@ local effects = require("__core__.lualib.surface-render-parameter-effects")
 
 require("tapatrion")
 
+data:extend{
+  {
+    type = "noise-expression",
+    name = "tapatrion_elevation",
+    expression = "lerp(blended, maxed, 0.4)",
+    local_expressions = {
+      maxed = "max(formation_clumped, formation_broken)",
+      blended = "lerp(formation_clumped, formation_broken, 0.4)",
+      formation_clumped = "-25\z
+                          + 12 * max(tapatrion_island_peaks, random_island_peaks)\z
+                          + 15 * tri_crack",
+      formation_broken  = "-20\z
+                          + 8 * max(tapatrion_island_peaks * 1.1, min(0., random_island_peaks - 0.2))\z
+                          + 13 * (pow(voronoi_large * max(0, voronoi_large_cell * 1.2 - 0.2) + 0.5 * voronoi_small * max(0, aux + 0.1), 0.5))",
+      random_island_peaks = "abs(amplitude_corrected_multioctave_noise{x = x,\z
+                                                                  y = y,\z
+                                                                  seed0 = map_seed,\z
+                                                                  seed1 = 1000,\z
+                                                                  input_scale = segmentation_mult / 1.2,\z
+                                                                  offset_x = -10000,\z
+                                                                  octaves = 6,\z
+                                                                  persistence = 0.8,\z
+                                                                  amplitude = 1})",
+      voronoi_large = "voronoi_facet_noise{   x = x + aquilo_wobble_x * 2,\z
+                                              y = y + aquilo_wobble_y * 2,\z
+                                              seed0 = map_seed,\z
+                                              seed1 = 'aquilo-cracks',\z
+                                              grid_size = 24,\z
+                                              distance_type = 'euclidean',\z
+                                              jitter = 1}",
+      voronoi_large_cell = "voronoi_cell_id{  x = x + aquilo_wobble_x * 2,\z
+                                              y = y + aquilo_wobble_y * 2,\z
+                                              seed0 = map_seed,\z
+                                              seed1 = 'aquilo-cracks',\z
+                                              grid_size = 24,\z
+                                              distance_type = 'euclidean',\z
+                                              jitter = 1}",
+      voronoi_small  = "voronoi_facet_noise{   x = x + aquilo_wobble_x * 2,\z
+                                              y = y + aquilo_wobble_y * 2,\z
+                                              seed0 = map_seed,\z
+                                              seed1 = 'aquilo-cracks',\z
+                                              grid_size = 10,\z
+                                              distance_type = 'euclidean',\z
+                                              jitter = 1}",
+      tri_crack = "min(aquilo_simple_billows{seed1 = 2000, octaves = 3, input_scale = segmentation_mult / 1.5},\z
+                       aquilo_simple_billows{seed1 = 3000, octaves = 3, input_scale = segmentation_mult / 1.2},\z
+                       aquilo_simple_billows{seed1 = 4000, octaves = 3, input_scale = segmentation_mult})",
+      segmentation_mult = "aquilo_segmentation_multiplier / 25",
+    }
+  },
+  {
+    type = "noise-expression",
+    name = "tapatrion_starting_island",
+    expression = "1 - distance * (aquilo_segmentation_multiplier / 50)"
+  },
+  {
+    type = "noise-expression",
+    name = "tapatrion_island_peaks",
+    -- before this point all spots should be in the -1 to 1 range
+    expression = "max(1.6 * (0.25 + tapatrion_starting_island),\z
+                      1.1 * (0.10 + fulgora_vaults_and_starting_vault))"
+  },
+  
+}
+
 --START MAP GEN
 function MapGen_Tapatrion()
     local map_gen_setting = table.deepcopy(data.raw.planet.aquilo.map_gen_settings)
@@ -24,7 +89,7 @@ function MapGen_Tapatrion()
         ["decorative:dark-mud-decal:probability"] = "gleba_dark_mud_probability",
         ["decorative:green-carpet-grass:probability"] = "gleba_green_carpet_grass_probability",
         ["decorative:green-hairy-grass:probability"] = "gleba_green_hairy_grass_probability",
-        elevation = "aquilo_elevation",
+        elevation = "tapatrion_elevation",
         temperature = "aquilo_temperature",
         moisture = "moisture_basic",
         aux = "aquilo_aux",
@@ -35,12 +100,13 @@ function MapGen_Tapatrion()
     }
     map_gen_setting.autoplace_controls = {
         ["gleba_plants"] = { frequency = 12, size = 2, richness = 1},
-        ["gleba_enemy_base"] = { frequency = 20, size = 1, richness = 1},
+        ["gleba_enemy_base"] = { frequency = 16, size = 1, richness = 1},
         ["gleba_water"] = {frequency = 0.4, size = 0.5, richness = 0.5},
         ["gleba_cliff"] = {},
-        ["gleba_stone"] = {frequency = 20, size = 10, richness = 100},
+        ["stone"] = {frequency = 6, size = 3, richness = 3},
+        ["gleba_stone"] = {frequency = 20, size = 10, richness = 20},
         ["trees"] = { frequency = 4.5, size = 2, richness = 1 },
-        ["enemy-base"] = { frequency = 12, size = 1.2, richness = 1},
+        ["enemy-base"] = { frequency = 8, size = 1.2, richness = 1},
         ["lithium_brine"] = {},
         ["fluorine_vent"] = {},
         ["aquilo_crude_oil"] = {}
@@ -160,8 +226,6 @@ function MapGen_Tapatrion()
           ["barnacles-decal"] = {},
           ["coral-stunted"] = {},
           ["coral-stunted-grey"] = {},
-          ["nerve-roots-veins-dense"] = {},
-          ["nerve-roots-veins-sparse"] = {},
           ["yellow-coral"] = {},
           ["solo-barnacle"] = {},
           ["curly-roots-orange"] = {},
@@ -251,9 +315,9 @@ local tapatrion =
     magnitude = nauvis.magnitude,
     subgroup = "planets",
     surface_properties = {
-        ["solar-power"] = 1,
+        ["solar-power"] = 20,
         ["pressure"] = 2000,
-        ["magnetic-field"] = 99,
+        ["magnetic-field"] = nauvis.surface_properties["magnetic-field"],
         ["gravity"] = 20,
         ["day-night-cycle"] = nauvis.surface_properties["day-night-cycle"],
     },
@@ -459,6 +523,10 @@ data:extend {{
         },
         {
           type = "unlock-recipe",
+          recipe = "coal-synthesis"
+        },
+        {
+          type = "unlock-recipe",
           recipe = "ammoniacal-solution-separation",
         },
         {
@@ -525,12 +593,23 @@ for _,recipe in pairs (data.raw.recipe) do
   if recipe.surface_conditions then
     for i, condition in pairs( recipe.surface_conditions ) do
       if condition.property == "pressure" and condition.min == 100 then 
-        condition.min = 100
         condition.max = 2000
       end
     end
   end 
 end 
+
+for _,recipe in pairs (data.raw.recipe) do 
+  if recipe.surface_conditions then
+    for i, condition in pairs( recipe.surface_conditions ) do
+      if condition.property == "pressure" and condition.max == 300 then 
+        condition.max = 2000
+      end
+    end
+  end 
+end 
+
+
 
 -- Use ice on marsh
 for _,recipe in pairs (data.raw.item) do 
