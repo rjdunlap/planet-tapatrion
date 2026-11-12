@@ -178,7 +178,8 @@ function MapGen_Tapatrion()
 
           ["green-asterisk"] = {},
           ["fulgoran-ruin-tiny"] = {},
-          ["fulgoran-gravewort"] = {},
+          ["small-fulgoran-gravewort"] = {},
+          ["medium-fulgoran-gravewort"] = {},
           ["urchin-cactus"] = {},
           ["medium-fulgora-rock"] = {},
           ["small-fulgora-rock"] = {},
@@ -562,7 +563,7 @@ data:extend {{
 data:extend({{
   type = "recipe",
   name = "decomposition",
-  category = "chemistry-or-cryogenics",
+  categories = {"chemistry", "cryogenics"},
   enabled = false,
   energy_required = 12,
   ingredients =

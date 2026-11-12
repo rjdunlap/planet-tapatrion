@@ -8,5 +8,5 @@ utils.remove_tech("steel-processing", true, true)
 
 utils.set_prerequisites("heat-inserter", {"heating-tower"})
 
-utils.set_trigger("agriculture", {type = "mine-entity", entity = "stingfrond"})
-utils.set_trigger("heating-tower", {type = "mine-entity", entity = "sunnycomb"})
+utils.set_trigger("agriculture", {type = "mine-entity", entities = {"stingfrond"}})
+utils.set_trigger("heating-tower", {type = "mine-entity", entities = {"sunnycomb"}})
