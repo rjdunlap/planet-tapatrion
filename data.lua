@@ -3,7 +3,6 @@ local asteroid_util = require("__space-age__.prototypes.planet.asteroid-spawn-de
 local planet_catalogue_gleba = require("__space-age__.prototypes.planet.procession-catalogue-gleba")
 local effects = require("__core__.lualib.surface-render-parameter-effects")
 
-require("tapatrion")
 
 data:extend{
   {
@@ -107,9 +106,10 @@ function MapGen_Tapatrion()
         ["gleba_stone"] = {frequency = 20, size = 10, richness = 20},
         ["trees"] = { frequency = 4.5, size = 2, richness = 1 },
         ["enemy-base"] = { frequency = 8, size = 1.2, richness = 1},
-        ["lithium_brine"] = {},
-        ["fluorine_vent"] = {},
-        ["aquilo_crude_oil"] = {}
+        -- More vents/brine/oil than Aquilo's defaults: players reported finding none on this planet.
+        ["lithium_brine"] = { frequency = 12, size = 4, richness = 3 },
+        ["fluorine_vent"] = { frequency = 4, size = 2, richness = 2 },
+        ["aquilo_crude_oil"] = { frequency = 6, size = 2, richness = 2 }
     }
 
     map_gen_setting.autoplace_settings["tile"] =
@@ -563,6 +563,12 @@ data:extend {{
 data:extend({{
   type = "recipe",
   name = "decomposition",
+-- Only craftable on its own planet (it was usable on other planets with the same pressure, which is overpowered).
+  surface_conditions =
+  {
+    {property = "solar-power", min = 20, max = 20},
+    {property = "pressure", min = 2000, max = 2000},
+  },
   categories = {"chemistry", "cryogenics"},
   enabled = false,
   energy_required = 12,
@@ -627,4 +633,7 @@ end
 
 
 
-APS.add_planet{name = "tapatrion", filename = "__planet-tapatrion__/tapatrion.lua", technology = "planet-discovery-tapatrion"}
+-- Any Planet Start is optional.
+if mods["any-planet-start"] then
+    APS.add_planet{name = "tapatrion", filename = "__planet-tapatrion__/tapatrion.lua", technology = "planet-discovery-tapatrion"}
+end
