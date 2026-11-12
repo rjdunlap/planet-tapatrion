@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.3.1
+Date: 2026-11-12
+  Balancing:
+    - Added a direct space connection from Tapatrion to Aquilo with Aquilo-grade (medium and large) asteroids, so Tapatrion is not a shortcut that skips them.
+---------------------------------------------------------------------------------------------------
 Version: 0.3.0
 Date: 2026-11-12
   Changes:

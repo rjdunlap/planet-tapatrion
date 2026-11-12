@@ -480,6 +480,19 @@ local tapatrion_connection = {
 }
 data:extend{tapatrion_connection}
 
+-- Direct route to Aquilo with Aquilo-grade (medium/large) asteroids, longer than the vanilla Gleba -> Aquilo route
+-- so that going through Tapatrion is not a shortcut that skips the big asteroids.
+local tapatrion_aquilo_connection = {
+  type = "space-connection",
+  name = "tapatrion-aquilo",
+  from = "tapatrion",
+  to = "aquilo",
+  subgroup = data.raw["space-connection"]["nauvis-vulcanus"].subgroup,
+  length = 20000,
+  asteroid_spawn_definitions = asteroid_util.spawn_definitions(asteroid_util.gleba_aquilo),
+}
+data:extend{tapatrion_aquilo_connection}
+
 data.raw["mining-drill"]["burner-mining-drill"].heating_energy = "0kW"
 
 data:extend{
